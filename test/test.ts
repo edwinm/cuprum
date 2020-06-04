@@ -80,6 +80,21 @@ describe("Cuprum", () => {
     }
   });
 
+  it("Old value", () => {
+    let result = "";
+    const pipe1$ = new Cuprum<string>();
+
+    pipe1$.subscribe((value, oldValue) => {
+      result += `[${value}/${oldValue}]`;
+    });
+
+    pipe1$.dispatch("a1");
+    pipe1$.dispatch("a2");
+    pipe1$.dispatch("a3");
+
+    assert.equal(result, "[a1/undefined][a2/a1][a3/a2]");
+  });
+
   it("Promise", (done) => {
     const pipe1$ = new Cuprum<string>();
 

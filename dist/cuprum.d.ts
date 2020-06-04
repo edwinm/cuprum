@@ -6,8 +6,8 @@ export declare class Cuprum<T> {
     private hot;
     dispatch(value: T): void;
     subscribeNext(fn: (value: T) => void): Subscription;
-    subscribe(fn: (value: T) => void): Subscription;
-    unsubscribe(fn: (value: T) => void): void;
+    subscribe(fn: (value: T, oldValue?: T) => void): Subscription;
+    unsubscribe(fn: (value: T, oldValue?: T) => void): void;
     private notifyHotSubscribers;
     subscribeHot(fn: (value: boolean) => void): {
         unsubscribe: () => void;

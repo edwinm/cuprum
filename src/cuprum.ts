@@ -1,14 +1,15 @@
 export class Cuprum<T> {
   private val: T;
-  private subscribers: Set<(value: T) => void> = new Set();
+  private subscribers: Set<(value: T, oldValue?: T) => void> = new Set();
   private subscribersHot: Set<(value: boolean) => void> = new Set();
   private dispatched = false;
   private hot = false;
 
   dispatch(value: T) {
+    const oldValue = this.val;
     this.val = value;
     this.dispatched = true;
-    this.subscribers.forEach((fn) => fn(value));
+    this.subscribers.forEach((fn) => fn(value, oldValue));
   }
 
   subscribeNext(fn: (value: T) => void): Subscription {
@@ -21,14 +22,14 @@ export class Cuprum<T> {
     };
   }
 
-  subscribe(fn: (value: T) => void) {
+  subscribe(fn: (value: T, oldValue?: T) => void) {
     if (this.dispatched) {
       fn(this.val);
     }
     return this.subscribeNext(fn);
   }
 
-  unsubscribe(fn: (value: T) => void) {
+  unsubscribe(fn: (value: T, oldValue?: T) => void) {
     this.subscribers.delete(fn);
     this.notifyHotSubscribers();
   }
