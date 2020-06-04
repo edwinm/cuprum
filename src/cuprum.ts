@@ -1,6 +1,4 @@
-export { Cuprum, tap, fromEvent };
-
-class Cuprum<T> {
+export class Cuprum<T> {
   private val: T;
   private subscribers: Set<(value: T) => void> = new Set();
   private subscribersHot: Set<(value: boolean) => void> = new Set();
@@ -62,9 +60,8 @@ class Cuprum<T> {
 
   promise() {
     return new Promise<T>((resolve) => {
-      const self = this;
-      this.subscribe(function fn(value) {
-        self.unsubscribe(fn);
+      const sub = this.subscribe(function fn(value) {
+        sub.unsubscribe();
         resolve(value);
       });
     });
@@ -105,16 +102,16 @@ class Cuprum<T> {
   }
 }
 
-class Subscription {
+export class Subscription {
   unsubscribe: () => void;
 }
 
-function tap(fn: (val: any) => any) {
+export function tap(fn: (val: any) => any) {
   fn(this.val);
   return this;
 }
 
-function fromEvent(element, eventType) {
+export function fromEvent(element, eventType) {
   const obs$ = new Cuprum<Event>();
   const dispatch = (evt: Event) => {
     obs$.dispatch(evt);
@@ -130,7 +127,7 @@ function fromEvent(element, eventType) {
 }
 
 // TODO: combine with more than two arguments
-function combine<T, U>(obs1$: Cuprum<T>, obs2$: Cuprum<U>) {
+export function combine<T, U>(obs1$: Cuprum<T>, obs2$: Cuprum<U>) {
   const obs$ = new Cuprum<[T, U]>();
   let sub1: Subscription;
   let sub2: Subscription;

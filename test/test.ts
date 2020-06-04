@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { Cuprum } from "../src/cuprum";
+import { Cuprum, fromEvent, combine } from "../src/cuprum";
 
 /**
  * Test framework used:
@@ -90,5 +90,41 @@ describe("Cuprum", () => {
       assert.equal(value, "a2");
       done();
     })();
+  });
+
+  it("fromEvent", (done) => {
+    const a = document.createElement("a");
+    fromEvent(a, "click").subscribe(() => {
+      done();
+    });
+    a.click();
+  });
+
+  it("fromEvent custom", (done) => {
+    const div = document.createElement("div");
+    const event = new CustomEvent("update", { detail: "a1" });
+    fromEvent(div, "update").subscribe((event: CustomEvent) => {
+      assert.equal(event.detail, "a1");
+      done();
+    });
+    div.dispatchEvent(event);
+  });
+
+  it("Combine", () => {
+    let result = "";
+    const pipe1$ = new Cuprum<string>();
+    const pipe2$ = new Cuprum<string>();
+
+    const combined$ = combine(pipe1$, pipe2$);
+
+    combined$.subscribe(([val1, val2]) => {
+      result += `[${val1}/${val2}]`;
+    });
+
+    pipe1$.dispatch("a1");
+    pipe2$.dispatch("a2");
+    pipe1$.dispatch("a3");
+
+    assert.equal(result, "[a1/undefined][a1/a2][a3/a2]");
   });
 });

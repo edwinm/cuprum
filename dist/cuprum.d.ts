@@ -1,5 +1,4 @@
-export { Cuprum, tap, fromEvent };
-declare class Cuprum<T> {
+export declare class Cuprum<T> {
     private val;
     private subscribers;
     private subscribersHot;
@@ -19,8 +18,9 @@ declare class Cuprum<T> {
     map<U>(fn: (val: T) => U): Cuprum<U>;
     filter(fn: (val: T) => boolean): Cuprum<T>;
 }
-declare class Subscription {
+export declare class Subscription {
     unsubscribe: () => void;
 }
-declare function tap(fn: (val: any) => any): any;
-declare function fromEvent(element: any, eventType: any): Cuprum<Event>;
+export declare function tap(fn: (val: any) => any): any;
+export declare function fromEvent(element: any, eventType: any): Cuprum<Event>;
+export declare function combine<T, U>(obs1$: Cuprum<T>, obs2$: Cuprum<U>): Cuprum<[T, U]>;
