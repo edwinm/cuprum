@@ -112,6 +112,7 @@ export function tap(fn: (val: any) => any) {
   return this;
 }
 
+// TODO: 1st arg is string, then doc.querySelectAll
 export function fromEvent(element, eventType) {
   const obs$ = new Cuprum<Event>();
   const dispatch = (evt: Event) => {
