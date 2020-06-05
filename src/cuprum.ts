@@ -103,10 +103,6 @@ export class Cuprum<T> {
   }
 }
 
-export class Subscription {
-  unsubscribe: () => void;
-}
-
 export function tap(fn: (val: any) => any) {
   fn(this.val);
   return this;
@@ -150,4 +146,8 @@ export function combine<T, U>(obs1$: Cuprum<T>, obs2$: Cuprum<U>) {
   });
 
   return obs$;
+}
+
+interface Subscription {
+  unsubscribe: () => void;
 }

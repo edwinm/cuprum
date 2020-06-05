@@ -18,9 +18,10 @@ export declare class Cuprum<T> {
     map<U>(fn: (val: T) => U): Cuprum<U>;
     filter(fn: (val: T) => boolean): Cuprum<T>;
 }
-export declare class Subscription {
-    unsubscribe: () => void;
-}
 export declare function tap(fn: (val: any) => any): any;
 export declare function fromEvent(element: any, eventType: any): Cuprum<Event>;
 export declare function combine<T, U>(obs1$: Cuprum<T>, obs2$: Cuprum<U>): Cuprum<[T, U]>;
+interface Subscription {
+    unsubscribe: () => void;
+}
+export {};
