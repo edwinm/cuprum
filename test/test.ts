@@ -142,4 +142,28 @@ describe("Cuprum", () => {
 
     assert.equal(result, "[a1/undefined][a1/a2][a3/a2]");
   });
+
+  it("Combine three", () => {
+    let result = "";
+    const pipe1$ = new Cuprum<string>();
+    const pipe2$ = new Cuprum<string>();
+    const pipe3$ = new Cuprum<number>();
+
+    const combined$ = combine(pipe1$, pipe2$, pipe3$);
+
+    combined$.subscribe(([val1, val2, val3]) => {
+      result += `[${val1}/${val2}/${val3}]`;
+    });
+
+    pipe1$.dispatch("1a");
+    pipe2$.dispatch("2a");
+    pipe1$.dispatch("1b");
+    pipe3$.dispatch(12);
+    pipe1$.dispatch("1c");
+
+    assert.equal(
+      result,
+      "[1a/undefined/undefined][1a/2a/undefined][1b/2a/undefined][1b/2a/12][1c/2a/12]"
+    );
+  });
 });

@@ -108,7 +108,6 @@ export function tap(fn: (val: any) => any) {
   return this;
 }
 
-// TODO: 1st arg is string, then doc.querySelectAll
 export function fromEvent(element, eventType) {
   const obs$ = new Cuprum<Event>();
   const dispatch = (evt: Event) => {
@@ -124,24 +123,62 @@ export function fromEvent(element, eventType) {
   return obs$;
 }
 
-// TODO: combine with more than two arguments
-export function combine<T, U>(obs1$: Cuprum<T>, obs2$: Cuprum<U>) {
-  const obs$ = new Cuprum<[T, U]>();
-  let sub1: Subscription;
-  let sub2: Subscription;
+export function combine<T>(obs1$: Cuprum<T>): Cuprum<[T]>;
+export function combine<T, U>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<U>
+): Cuprum<[T, U]>;
+export function combine<T, U, V>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<U>,
+  obs3$: Cuprum<V>
+): Cuprum<[T, U, V]>;
+export function combine<T, U, V, W>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<U>,
+  obs3$: Cuprum<V>,
+  obs4$: Cuprum<W>
+): Cuprum<[T, U, V, W]>;
+export function combine<T, U, V, W, X>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<U>,
+  obs3$: Cuprum<V>,
+  obs4$: Cuprum<W>,
+  obs5$: Cuprum<X>
+): Cuprum<[T, U, V, W, X]>;
+export function combine<T, U, V, W, X, Y>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<U>,
+  obs3$: Cuprum<V>,
+  obs4$: Cuprum<W>,
+  obs5$: Cuprum<X>,
+  obs6$: Cuprum<Y>
+): Cuprum<[T, U, V, W, X, Y]>;
+export function combine<T, U, V, W, X, Y, Z>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<U>,
+  obs3$: Cuprum<V>,
+  obs4$: Cuprum<W>,
+  obs5$: Cuprum<X>,
+  obs6$: Cuprum<Y>,
+  obs7$: Cuprum<Z>
+): Cuprum<[T, U, V, W, X, Y, Z]>;
+
+export function combine(...cuprumList: Cuprum<any>[]) {
+  const obs$ = new Cuprum();
+  const subs = new Set<Subscription>();
 
   obs$.subscribeHot((hot) => {
     if (hot) {
-      sub1 = obs1$.subscribe((val1) => {
-        obs$.dispatch([val1, obs2$.value()]);
-      });
-
-      sub2 = obs2$.subscribe((val2) => {
-        obs$.dispatch([obs1$.value(), val2]);
+      cuprumList.forEach((obs) => {
+        subs.add(
+          obs.subscribe(() => {
+            obs$.dispatch(cuprumList.map((obs1) => obs1.value()));
+          })
+        );
       });
     } else {
-      sub1.unsubscribe();
-      sub2.unsubscribe();
+      subs.forEach((sub) => sub.unsubscribe());
     }
   });
 
