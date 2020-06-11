@@ -68,6 +68,8 @@ export class Cuprum<T> {
     });
   }
 
+  // TODO: pipe
+
   // TODO: async map
 
   map<U>(fn: (val: T) => U) {
