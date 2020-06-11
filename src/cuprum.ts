@@ -11,6 +11,7 @@ export class Cuprum<T> {
       throw "Can't dispatch on subject";
     }
     this.internalDispatch(value);
+    return this;
   }
 
   subscribe(fn: (value: T, oldValue?: T) => void) {
@@ -57,8 +58,6 @@ export class Cuprum<T> {
       });
     });
   }
-
-  // TODO: pipe
 
   // TODO: async map
 
@@ -201,7 +200,7 @@ export function combine(...cuprumList: Cuprum<unknown>[]) {
   return obs$;
 }
 
-export function merge<T>(obs1$: Cuprum<T>): Cuprum<[T]>;
+export function merge<T>(obs1$: Cuprum<T>): Cuprum<T>;
 export function merge<T>(obs1$: Cuprum<T>, obs2$: Cuprum<T>): Cuprum<T>;
 export function merge<T>(
   obs1$: Cuprum<T>,
@@ -259,8 +258,27 @@ export function merge(...cuprumList: Cuprum<unknown>[]) {
   return obs$;
 }
 
-type Observable<T> = Omit<Cuprum<T>, "dispatch">;
+export function interval(msec) {
+  const obs$ = new Cuprum();
+  let timer = <NodeJS.Timeout>null;
+  let counter;
 
-interface Subscription {
+  obs$.subscribeHot((hot) => {
+    if (hot) {
+      counter = 0;
+      timer = setInterval(() => {
+        obs$.dispatch(counter++);
+      }, msec);
+    } else {
+      clearInterval(timer);
+    }
+  });
+
+  return obs$;
+}
+
+export type Observable<T> = Omit<Cuprum<T>, "dispatch">;
+
+export interface Subscription {
   unsubscribe: () => void;
 }

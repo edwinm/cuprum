@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { Cuprum, fromEvent, combine, merge } from "../src/cuprum";
+import { Cuprum, fromEvent, combine, merge, interval } from "../src/cuprum";
 
 /**
  * Test framework used:
@@ -226,5 +226,21 @@ describe("Cuprum", () => {
     pipe1$.dispatch("1c");
 
     assert.equal(result, "[1a][2a][1b][3a][1c]");
+  });
+
+  it.only("Interval", (done) => {
+    let result = "";
+    const timer$ = interval(10);
+
+    const sub = timer$.subscribe((i) => {
+      result += `[${i}]`;
+      if (i == 10) {
+        sub.unsubscribe();
+        setTimeout(() => {
+          assert.equal(result, "[0][1][2][3][4][5][6][7][8][9][10]");
+          done();
+        }, 20);
+      }
+    });
   });
 });
