@@ -12,16 +12,6 @@ export class Cuprum<T> {
     this.subscribers.forEach((fn) => fn(value, oldValue));
   }
 
-  subscribeNext(fn: (value: T) => void): Subscription {
-    this.subscribers.add(fn);
-    this.notifyHotSubscribers();
-    return {
-      unsubscribe: () => {
-        this.subscribers.delete(fn);
-      },
-    };
-  }
-
   subscribe(fn: (value: T, oldValue?: T) => void) {
     if (this.dispatched) {
       fn(this.val);
@@ -32,13 +22,6 @@ export class Cuprum<T> {
   unsubscribe(fn: (value: T, oldValue?: T) => void) {
     this.subscribers.delete(fn);
     this.notifyHotSubscribers();
-  }
-
-  private notifyHotSubscribers() {
-    if (this.subscribers.size > 0 != this.hot) {
-      this.hot = this.subscribers.size > 0;
-      this.subscribersHot.forEach((fn) => fn(this.hot));
-    }
   }
 
   subscribeHot(fn: (value: boolean) => void) {
@@ -57,6 +40,10 @@ export class Cuprum<T> {
 
   value() {
     return this.val;
+  }
+
+  observable(): Observable<T> {
+    return this;
   }
 
   promise() {
@@ -102,6 +89,23 @@ export class Cuprum<T> {
       }
     });
     return event$;
+  }
+
+  private notifyHotSubscribers() {
+    if (this.subscribers.size > 0 != this.hot) {
+      this.hot = this.subscribers.size > 0;
+      this.subscribersHot.forEach((fn) => fn(this.hot));
+    }
+  }
+
+  private subscribeNext(fn: (value: T) => void): Subscription {
+    this.subscribers.add(fn);
+    this.notifyHotSubscribers();
+    return {
+      unsubscribe: () => {
+        this.subscribers.delete(fn);
+      },
+    };
   }
 }
 
@@ -244,6 +248,8 @@ export function merge(...cuprumList: Cuprum<unknown>[]) {
 
   return obs$;
 }
+
+type Observable<T> = Omit<Cuprum<T>, "dispatch">;
 
 interface Subscription {
   unsubscribe: () => void;

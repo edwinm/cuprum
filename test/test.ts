@@ -128,6 +128,21 @@ describe("Cuprum", () => {
     })();
   });
 
+  it("Observable", () => {
+    let result = "";
+    const pipe$ = new Cuprum<string>();
+    const obs$ = pipe$.observable();
+
+    obs$.subscribe((value) => {
+      result += `[${value}]`;
+    });
+
+    pipe$.dispatch("a0");
+    pipe$.dispatch("a1");
+
+    assert.equal(result, "[a0][a1]");
+  });
+
   it("fromEvent", (done) => {
     const a = document.createElement("a");
     fromEvent(a, "click").subscribe(() => {
