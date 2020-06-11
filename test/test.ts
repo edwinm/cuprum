@@ -95,6 +95,27 @@ describe("Cuprum", () => {
     assert.equal(result, "[a1/undefined][a2/a1][a3/a2]");
   });
 
+  it("Filter", () => {
+    let result = "";
+    const pipe$ = new Cuprum<string>();
+
+    pipe$
+      .filter((value) => value != "a0")
+      .subscribe((value) => {
+        result += `[${value}]`;
+      });
+
+    pipe$.dispatch("a0");
+    pipe$.dispatch("a1");
+    pipe$.dispatch("a2");
+    pipe$.dispatch("a0");
+    pipe$.dispatch("a3");
+    pipe$.dispatch("a0");
+    pipe$.dispatch("a4");
+
+    assert.equal(result, "[a1][a2][a3][a4]");
+  });
+
   it("Promise", (done) => {
     const pipe1$ = new Cuprum<string>();
 
