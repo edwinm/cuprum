@@ -141,6 +141,10 @@ describe("Cuprum", () => {
     pipe$.dispatch("a1");
 
     assert.equal(result, "[a0][a1]");
+
+    assert.throws(() => {
+      (<Cuprum<any>>obs$).dispatch("a");
+    });
   });
 
   it("fromEvent", (done) => {

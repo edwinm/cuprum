@@ -4,12 +4,13 @@ export class Cuprum<T> {
   private subscribersHot: Set<(value: boolean) => void> = new Set();
   private dispatched = false;
   private hot = false;
+  private isSubject = false;
 
   dispatch(value: T) {
-    const oldValue = this.val;
-    this.val = value;
-    this.dispatched = true;
-    this.subscribers.forEach((fn) => fn(value, oldValue));
+    if (this.isSubject) {
+      throw "Can't dispatch on subject";
+    }
+    this.internalDispatch(value);
   }
 
   subscribe(fn: (value: T, oldValue?: T) => void) {
@@ -43,7 +44,9 @@ export class Cuprum<T> {
   }
 
   observable(): Observable<T> {
-    return this;
+    const observable = this.map((value) => value);
+    observable.isSubject = true;
+    return observable;
   }
 
   promise() {
@@ -62,7 +65,7 @@ export class Cuprum<T> {
   map<U>(fn: (val: T) => U) {
     const event$ = new Cuprum<U>();
     const dispatch = (value) => {
-      event$.dispatch(fn(value));
+      event$.internalDispatch(fn(value));
     };
     event$.subscribeHot((hot) => {
       if (hot) {
@@ -106,6 +109,13 @@ export class Cuprum<T> {
         this.subscribers.delete(fn);
       },
     };
+  }
+
+  private internalDispatch(value: T) {
+    const oldValue = this.val;
+    this.val = value;
+    this.dispatched = true;
+    this.subscribers.forEach((fn) => fn(value, oldValue));
   }
 }
 
