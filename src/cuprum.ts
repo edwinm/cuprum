@@ -164,7 +164,7 @@ export function combine<T, U, V, W, X, Y, Z>(
   obs7$: Cuprum<Z>
 ): Cuprum<[T, U, V, W, X, Y, Z]>;
 
-export function combine(...cuprumList: Cuprum<any>[]) {
+export function combine(...cuprumList: Cuprum<unknown>[]) {
   const obs$ = new Cuprum();
   const subs = new Set<Subscription>();
 
@@ -174,6 +174,64 @@ export function combine(...cuprumList: Cuprum<any>[]) {
         subs.add(
           obs.subscribe(() => {
             obs$.dispatch(cuprumList.map((obs1) => obs1.value()));
+          })
+        );
+      });
+    } else {
+      subs.forEach((sub) => sub.unsubscribe());
+    }
+  });
+
+  return obs$;
+}
+
+export function merge<T>(obs1$: Cuprum<T>): Cuprum<[T]>;
+export function merge<T>(obs1$: Cuprum<T>, obs2$: Cuprum<T>): Cuprum<T>;
+export function merge<T>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<T>,
+  obs3$: Cuprum<T>
+): Cuprum<T>;
+export function merge<T>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<T>,
+  obs3$: Cuprum<T>,
+  obs4$: Cuprum<T>
+): Cuprum<T>;
+export function merge<T>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<T>,
+  obs3$: Cuprum<T>,
+  obs4$: Cuprum<T>,
+  obs5$: Cuprum<T>
+): Cuprum<T>;
+export function merge<T>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<T>,
+  obs3$: Cuprum<T>,
+  obs4$: Cuprum<T>,
+  obs5$: Cuprum<T>,
+  obs6$: Cuprum<T>
+): Cuprum<T>;
+export function merge<T>(
+  obs1$: Cuprum<T>,
+  obs2$: Cuprum<T>,
+  obs3$: Cuprum<T>,
+  obs4$: Cuprum<T>,
+  obs5$: Cuprum<T>,
+  obs6$: Cuprum<T>,
+  obs7$: Cuprum<T>
+): Cuprum<T>;
+export function merge(...cuprumList: Cuprum<unknown>[]) {
+  const obs$ = new Cuprum();
+  const subs = new Set<Subscription>();
+
+  obs$.subscribeHot((hot) => {
+    if (hot) {
+      cuprumList.forEach((obs) => {
+        subs.add(
+          obs.subscribe((value) => {
+            obs$.dispatch(value);
           })
         );
       });

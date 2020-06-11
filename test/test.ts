@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { Cuprum, fromEvent, combine } from "../src/cuprum";
+import { Cuprum, fromEvent, combine, merge } from "../src/cuprum";
 
 /**
  * Test framework used:
@@ -165,5 +165,26 @@ describe("Cuprum", () => {
       result,
       "[1a/undefined/undefined][1a/2a/undefined][1b/2a/undefined][1b/2a/12][1c/2a/12]"
     );
+  });
+
+  it("Merge", () => {
+    let result = "";
+    const pipe1$ = new Cuprum<string>();
+    const pipe2$ = new Cuprum<string>();
+    const pipe3$ = new Cuprum<string>();
+
+    const combined$ = merge(pipe1$, pipe2$, pipe3$);
+
+    combined$.subscribe((value) => {
+      result += `[${value}]`;
+    });
+
+    pipe1$.dispatch("1a");
+    pipe2$.dispatch("2a");
+    pipe1$.dispatch("1b");
+    pipe3$.dispatch("3a");
+    pipe1$.dispatch("1c");
+
+    assert.equal(result, "[1a][2a][1b][3a][1c]");
   });
 });
