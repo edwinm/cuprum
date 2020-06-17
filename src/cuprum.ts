@@ -118,11 +118,6 @@ export class Cuprum<T> {
   }
 }
 
-export function tap(fn: (val: any) => any) {
-  fn(this.val);
-  return this;
-}
-
 export function fromEvent(element, eventType) {
   const obs$ = new Cuprum<Event>();
   const dispatch = (evt: Event) => {
@@ -138,48 +133,48 @@ export function fromEvent(element, eventType) {
   return obs$;
 }
 
-export function combine<T>(obs1$: Cuprum<T>): Cuprum<[T]>;
+export function combine<T>(obs1$: Observable<T>): Observable<[T]>;
 export function combine<T, U>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<U>
-): Cuprum<[T, U]>;
+  obs1$: Observable<T>,
+  obs2$: Observable<U>
+): Observable<[T, U]>;
 export function combine<T, U, V>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<U>,
-  obs3$: Cuprum<V>
-): Cuprum<[T, U, V]>;
+  obs1$: Observable<T>,
+  obs2$: Observable<U>,
+  obs3$: Observable<V>
+): Observable<[T, U, V]>;
 export function combine<T, U, V, W>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<U>,
-  obs3$: Cuprum<V>,
-  obs4$: Cuprum<W>
-): Cuprum<[T, U, V, W]>;
+  obs1$: Observable<T>,
+  obs2$: Observable<U>,
+  obs3$: Observable<V>,
+  obs4$: Observable<W>
+): Observable<[T, U, V, W]>;
 export function combine<T, U, V, W, X>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<U>,
-  obs3$: Cuprum<V>,
-  obs4$: Cuprum<W>,
-  obs5$: Cuprum<X>
-): Cuprum<[T, U, V, W, X]>;
+  obs1$: Observable<T>,
+  obs2$: Observable<U>,
+  obs3$: Observable<V>,
+  obs4$: Observable<W>,
+  obs5$: Observable<X>
+): Observable<[T, U, V, W, X]>;
 export function combine<T, U, V, W, X, Y>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<U>,
-  obs3$: Cuprum<V>,
-  obs4$: Cuprum<W>,
-  obs5$: Cuprum<X>,
-  obs6$: Cuprum<Y>
-): Cuprum<[T, U, V, W, X, Y]>;
+  obs1$: Observable<T>,
+  obs2$: Observable<U>,
+  obs3$: Observable<V>,
+  obs4$: Observable<W>,
+  obs5$: Observable<X>,
+  obs6$: Observable<Y>
+): Observable<[T, U, V, W, X, Y]>;
 export function combine<T, U, V, W, X, Y, Z>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<U>,
-  obs3$: Cuprum<V>,
-  obs4$: Cuprum<W>,
-  obs5$: Cuprum<X>,
-  obs6$: Cuprum<Y>,
-  obs7$: Cuprum<Z>
-): Cuprum<[T, U, V, W, X, Y, Z]>;
+  obs1$: Observable<T>,
+  obs2$: Observable<U>,
+  obs3$: Observable<V>,
+  obs4$: Observable<W>,
+  obs5$: Observable<X>,
+  obs6$: Observable<Y>,
+  obs7$: Observable<Z>
+): Observable<[T, U, V, W, X, Y, Z]>;
 
-export function combine(...cuprumList: Cuprum<unknown>[]) {
+export function combine(...cuprumList: Observable<unknown>[]) {
   const obs$ = new Cuprum();
   const subs = new Set<Subscription>();
 
@@ -197,47 +192,50 @@ export function combine(...cuprumList: Cuprum<unknown>[]) {
     }
   });
 
-  return obs$;
+  return <Observable<unknown>>obs$;
 }
 
-export function merge<T>(obs1$: Cuprum<T>): Cuprum<T>;
-export function merge<T>(obs1$: Cuprum<T>, obs2$: Cuprum<T>): Cuprum<T>;
+export function merge<T>(obs1$: Observable<T>): Observable<T>;
 export function merge<T>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<T>,
-  obs3$: Cuprum<T>
-): Cuprum<T>;
+  obs1$: Observable<T>,
+  obs2$: Observable<T>
+): Observable<T>;
 export function merge<T>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<T>,
-  obs3$: Cuprum<T>,
-  obs4$: Cuprum<T>
-): Cuprum<T>;
+  obs1$: Observable<T>,
+  obs2$: Observable<T>,
+  obs3$: Observable<T>
+): Observable<T>;
 export function merge<T>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<T>,
-  obs3$: Cuprum<T>,
-  obs4$: Cuprum<T>,
-  obs5$: Cuprum<T>
-): Cuprum<T>;
+  obs1$: Observable<T>,
+  obs2$: Observable<T>,
+  obs3$: Observable<T>,
+  obs4$: Observable<T>
+): Observable<T>;
 export function merge<T>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<T>,
-  obs3$: Cuprum<T>,
-  obs4$: Cuprum<T>,
-  obs5$: Cuprum<T>,
-  obs6$: Cuprum<T>
-): Cuprum<T>;
+  obs1$: Observable<T>,
+  obs2$: Observable<T>,
+  obs3$: Observable<T>,
+  obs4$: Observable<T>,
+  obs5$: Observable<T>
+): Observable<T>;
 export function merge<T>(
-  obs1$: Cuprum<T>,
-  obs2$: Cuprum<T>,
-  obs3$: Cuprum<T>,
-  obs4$: Cuprum<T>,
-  obs5$: Cuprum<T>,
-  obs6$: Cuprum<T>,
-  obs7$: Cuprum<T>
-): Cuprum<T>;
-export function merge(...cuprumList: Cuprum<unknown>[]) {
+  obs1$: Observable<T>,
+  obs2$: Observable<T>,
+  obs3$: Observable<T>,
+  obs4$: Observable<T>,
+  obs5$: Observable<T>,
+  obs6$: Observable<T>
+): Observable<T>;
+export function merge<T>(
+  obs1$: Observable<T>,
+  obs2$: Observable<T>,
+  obs3$: Observable<T>,
+  obs4$: Observable<T>,
+  obs5$: Observable<T>,
+  obs6$: Observable<T>,
+  obs7$: Observable<T>
+): Observable<T>;
+export function merge(...cuprumList: Observable<unknown>[]) {
   const obs$ = new Cuprum();
   const subs = new Set<Subscription>();
 
@@ -255,7 +253,7 @@ export function merge(...cuprumList: Cuprum<unknown>[]) {
     }
   });
 
-  return obs$;
+  return <Observable<unknown>>obs$;
 }
 
 export function interval(msec) {

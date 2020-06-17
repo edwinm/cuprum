@@ -228,7 +228,7 @@ describe("Cuprum", () => {
     assert.equal(result, "[1a][2a][1b][3a][1c]");
   });
 
-  it.only("Interval", (done) => {
+  it("Interval", (done) => {
     let result = "";
     const timer$ = interval(10);
 
