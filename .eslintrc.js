@@ -8,7 +8,6 @@ module.exports = {
     "prettier/@typescript-eslint",
   ],
   rules: {
-    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-types": "off",
     "no-prototype-builtins": "off",
   },

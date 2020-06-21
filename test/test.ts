@@ -143,7 +143,7 @@ describe("Cuprum", () => {
     assert.equal(result, "[a0][a1]");
 
     assert.throws(() => {
-      (<Cuprum<any>>obs$).dispatch("a");
+      (<Cuprum<unknown>>obs$).dispatch("a");
     });
   });
 
