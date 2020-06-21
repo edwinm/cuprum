@@ -6,7 +6,7 @@ export class Cuprum<T> {
   private hot = false;
   private isSubject = false;
 
-  dispatch(value: T) {
+  dispatch(value: T): Cuprum<T> {
     if (this.isSubject) {
       throw new Error("Can't dispatch on subject");
     }
@@ -14,33 +14,33 @@ export class Cuprum<T> {
     return this;
   }
 
-  subscribe(fn: (value: T, oldValue?: T) => void) {
+  subscribe(fn: (value: T, oldValue?: T) => void): Subscription {
     if (this.dispatched) {
       fn(this.val);
     }
     return this.subscribeNext(fn);
   }
 
-  unsubscribe(fn: (value: T, oldValue?: T) => void) {
+  unsubscribe(fn: (value: T, oldValue?: T) => void): void {
     this.subscribers.delete(fn);
     this.notifyHotSubscribers();
   }
 
-  subscribeHot(fn: (value: boolean) => void) {
+  subscribeHot(fn: (value: boolean) => void): Subscription {
     this.subscribersHot.add(fn);
     return {
-      unsubscribe: () => {
+      unsubscribe: (): void => {
         this.subscribersHot.delete(fn);
       },
     };
   }
 
-  clear() {
+  clear(): void {
     this.subscribers.clear();
     this.subscribersHot.clear();
   }
 
-  value() {
+  value(): T {
     return this.val;
   }
 
@@ -50,7 +50,7 @@ export class Cuprum<T> {
     return observable;
   }
 
-  promise() {
+  promise(): Promise<T> {
     return new Promise<T>((resolve) => {
       const sub = this.subscribe(function fn(value) {
         sub.unsubscribe();
@@ -61,7 +61,7 @@ export class Cuprum<T> {
 
   // TODO: async map
 
-  map<U>(fn: (val: T) => U) {
+  map<U>(fn: (val: T) => U): Cuprum<U> {
     const event$ = new Cuprum<U>();
     const dispatch = (value) => {
       event$.internalDispatch(fn(value));
@@ -76,7 +76,7 @@ export class Cuprum<T> {
     return event$;
   }
 
-  filter(fn: (val: T) => boolean) {
+  filter(fn: (val: T) => boolean): Cuprum<T> {
     const event$ = new Cuprum<T>();
     const dispatch = (value) => {
       if (fn(value)) {
@@ -104,7 +104,7 @@ export class Cuprum<T> {
     this.subscribers.add(fn);
     this.notifyHotSubscribers();
     return {
-      unsubscribe: () => {
+      unsubscribe: (): void => {
         this.subscribers.delete(fn);
       },
     };
@@ -118,7 +118,10 @@ export class Cuprum<T> {
   }
 }
 
-export function fromEvent(element, eventType) {
+export function fromEvent(
+  element: HTMLElement,
+  eventType: string
+): Cuprum<Event> {
   const obs$ = new Cuprum<Event>();
   const dispatch = (evt: Event) => {
     obs$.dispatch(evt);
@@ -174,7 +177,9 @@ export function combine<T, U, V, W, X, Y, Z>(
   obs7$: Observable<Z>
 ): Observable<[T, U, V, W, X, Y, Z]>;
 
-export function combine(...cuprumList: Observable<unknown>[]) {
+export function combine(
+  ...cuprumList: Observable<unknown>[]
+): Observable<unknown> {
   const obs$ = new Cuprum();
   const subs = new Set<Subscription>();
 
@@ -216,7 +221,7 @@ export function merge<T>(...cuprumList: Observable<T>[]): Observable<T> {
   return <Observable<T>>obs$;
 }
 
-export function interval(msec) {
+export function interval(msec: number): Cuprum<unknown> {
   const obs$ = new Cuprum();
   let timer = <NodeJS.Timeout>null;
   let counter;
