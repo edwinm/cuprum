@@ -195,47 +195,7 @@ export function combine(...cuprumList: Observable<unknown>[]) {
   return <Observable<unknown>>obs$;
 }
 
-export function merge<T>(obs1$: Observable<T>): Observable<T>;
-export function merge<T>(
-  obs1$: Observable<T>,
-  obs2$: Observable<T>
-): Observable<T>;
-export function merge<T>(
-  obs1$: Observable<T>,
-  obs2$: Observable<T>,
-  obs3$: Observable<T>
-): Observable<T>;
-export function merge<T>(
-  obs1$: Observable<T>,
-  obs2$: Observable<T>,
-  obs3$: Observable<T>,
-  obs4$: Observable<T>
-): Observable<T>;
-export function merge<T>(
-  obs1$: Observable<T>,
-  obs2$: Observable<T>,
-  obs3$: Observable<T>,
-  obs4$: Observable<T>,
-  obs5$: Observable<T>
-): Observable<T>;
-export function merge<T>(
-  obs1$: Observable<T>,
-  obs2$: Observable<T>,
-  obs3$: Observable<T>,
-  obs4$: Observable<T>,
-  obs5$: Observable<T>,
-  obs6$: Observable<T>
-): Observable<T>;
-export function merge<T>(
-  obs1$: Observable<T>,
-  obs2$: Observable<T>,
-  obs3$: Observable<T>,
-  obs4$: Observable<T>,
-  obs5$: Observable<T>,
-  obs6$: Observable<T>,
-  obs7$: Observable<T>
-): Observable<T>;
-export function merge(...cuprumList: Observable<unknown>[]) {
+export function merge<T>(...cuprumList: Observable<T>[]): Observable<T> {
   const obs$ = new Cuprum();
   const subs = new Set<Subscription>();
 
@@ -253,7 +213,7 @@ export function merge(...cuprumList: Observable<unknown>[]) {
     }
   });
 
-  return <Observable<unknown>>obs$;
+  return <Observable<T>>obs$;
 }
 
 export function interval(msec) {
