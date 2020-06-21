@@ -8,7 +8,7 @@ export class Cuprum<T> {
 
   dispatch(value: T) {
     if (this.isSubject) {
-      throw "Can't dispatch on subject";
+      throw new Error("Can't dispatch on subject");
     }
     this.internalDispatch(value);
     return this;
