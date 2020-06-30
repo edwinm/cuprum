@@ -118,12 +118,12 @@ export class Cuprum<T> {
   }
 }
 
-export function fromEvent(
+export function fromEvent<K extends keyof HTMLElementEventMap>(
   element: HTMLElement,
-  eventType: string
-): Cuprum<Event> {
-  const obs$ = new Cuprum<Event>();
-  const dispatch = (evt: Event) => {
+  eventType: K
+): Cuprum<HTMLElementEventMap[K]> {
+  const obs$ = new Cuprum<HTMLElementEventMap[K]>();
+  const dispatch = (evt: HTMLElementEventMap[K]) => {
     obs$.dispatch(evt);
   };
   obs$.subscribeHot((hot) => {
