@@ -1,3 +1,8 @@
+/**!
+ @preserve cuprum 0.1.13
+ @copyright 2020 Edwin Martin <edwin@bitstorm.org>
+ @license MIT
+ */
 export declare class Cuprum<T> {
     private val;
     private subscribers;
@@ -19,7 +24,7 @@ export declare class Cuprum<T> {
     private subscribeNext;
     private internalDispatch;
 }
-export declare function fromEvent<K extends keyof HTMLElementEventMap>(element: HTMLElement, eventType: K): Cuprum<HTMLElementEventMap[K]>;
+export declare function fromEvent<K extends keyof HTMLElementEventMap>(element: HTMLElement, eventType: K, options?: boolean | AddEventListenerOptions): Cuprum<HTMLElementEventMap[K]>;
 export declare function combine<T>(obs1$: Observable<T>): Observable<[T]>;
 export declare function combine<T, U>(obs1$: Observable<T>, obs2$: Observable<U>): Observable<[T, U]>;
 export declare function combine<T, U, V>(obs1$: Observable<T>, obs2$: Observable<U>, obs3$: Observable<V>): Observable<[T, U, V]>;

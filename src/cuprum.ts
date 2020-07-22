@@ -1,3 +1,8 @@
+/**!
+ @preserve cuprum 0.1.13
+ @copyright 2020 Edwin Martin <edwin@bitstorm.org>
+ @license MIT
+ */
 export class Cuprum<T> {
   private val: T;
   private subscribers: Set<(value: T, oldValue?: T) => void> = new Set();
