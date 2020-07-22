@@ -123,13 +123,19 @@ export class Cuprum<T> {
   }
 }
 
-export function fromEvent<K extends keyof HTMLElementEventMap>(
-  element: HTMLElement,
+interface HTMLElementWindowEventHandlersEventMap
+  extends HTMLElementEventMap,
+    WindowEventHandlersEventMap {}
+
+export function fromEvent<
+  K extends keyof HTMLElementWindowEventHandlersEventMap
+>(
+  element: HTMLElement | Window,
   eventType: K,
   options?: boolean | AddEventListenerOptions
-): Cuprum<HTMLElementEventMap[K]> {
-  const obs$ = new Cuprum<HTMLElementEventMap[K]>();
-  const dispatch = (evt: HTMLElementEventMap[K]) => {
+): Cuprum<HTMLElementWindowEventHandlersEventMap[K]> {
+  const obs$ = new Cuprum<HTMLElementWindowEventHandlersEventMap[K]>();
+  const dispatch = (evt: HTMLElementWindowEventHandlersEventMap[K]) => {
     obs$.dispatch(evt);
   };
   obs$.subscribeHot((hot) => {
