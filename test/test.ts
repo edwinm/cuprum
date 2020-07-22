@@ -155,16 +155,6 @@ describe("Cuprum", () => {
     a.click();
   });
 
-  it("fromEvent custom", (done) => {
-    const div = document.createElement("div");
-    const event = new CustomEvent("update", { detail: "a1" });
-    fromEvent(div, "update").subscribe((event: CustomEvent) => {
-      assert.equal(event.detail, "a1");
-      done();
-    });
-    div.dispatchEvent(event);
-  });
-
   it("Combine", () => {
     let result = "";
     const pipe1$ = new Cuprum<string>();
