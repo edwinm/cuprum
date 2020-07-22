@@ -120,7 +120,8 @@ export class Cuprum<T> {
 
 export function fromEvent<K extends keyof HTMLElementEventMap>(
   element: HTMLElement,
-  eventType: K
+  eventType: K,
+  options?: boolean | AddEventListenerOptions
 ): Cuprum<HTMLElementEventMap[K]> {
   const obs$ = new Cuprum<HTMLElementEventMap[K]>();
   const dispatch = (evt: HTMLElementEventMap[K]) => {
@@ -128,9 +129,9 @@ export function fromEvent<K extends keyof HTMLElementEventMap>(
   };
   obs$.subscribeHot((hot) => {
     if (hot) {
-      element.addEventListener(eventType, dispatch, false);
+      element.addEventListener(eventType, dispatch, options);
     } else {
-      element.removeEventListener(eventType, dispatch, false);
+      element.removeEventListener(eventType, dispatch, options);
     }
   });
   return obs$;
