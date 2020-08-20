@@ -1,5 +1,5 @@
-/**!
- @preserve cuprum 0.1.14
+/**
+ cuprum __buildVersion__
  @copyright 2020 Edwin Martin <edwin@bitstorm.org>
  @license MIT
  */

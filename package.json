@@ -1,6 +1,6 @@
 {
   "name": "cuprum",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Tiny state management library",
   "main": "dist/bundle.common.min.js",
   "module": "dist/bundle.min.js",
@@ -38,6 +38,7 @@
   "homepage": "https://github.com/edwinm/cuprum#readme",
   "dependencies": {},
   "devDependencies": {
+    "@rollup/plugin-replace": "^2.3.3",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.4",
     "@typescript-eslint/eslint-plugin": "^3.0.2",
