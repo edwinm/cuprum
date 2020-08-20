@@ -146,6 +146,14 @@ export function fromEvent(
   eventType: string,
   options?: boolean | AddEventListenerOptions
 ) {
+  return fromCustomEvent(element, eventType, options);
+}
+
+export function fromCustomEvent(
+  element: HTMLElement | Document | Window,
+  eventType: string,
+  options?: boolean | AddEventListenerOptions
+) {
   const obs$ = new Cuprum();
   const dispatch = (evt: unknown) => {
     obs$.dispatch(evt);

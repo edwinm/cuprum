@@ -1,5 +1,12 @@
 import * as assert from "assert";
-import { Cuprum, fromEvent, combine, merge, interval } from "../src/cuprum";
+import {
+  Cuprum,
+  fromEvent,
+  combine,
+  merge,
+  interval,
+  fromCustomEvent,
+} from "../src/cuprum";
 
 /**
  * Test framework used:
@@ -153,6 +160,14 @@ describe("Cuprum", () => {
       done();
     });
     a.click();
+  });
+
+  it("fromCustomEvent", (done) => {
+    const div = document.createElement("div");
+    fromCustomEvent(div, "open").subscribe(() => {
+      done();
+    });
+    div.dispatchEvent(new Event("open"));
   });
 
   it("Combine", () => {
