@@ -1,5 +1,5 @@
 /**
- cuprum 0.1.15
+ cuprum 0.1.16
  @copyright 2020 Edwin Martin <edwin@bitstorm.org>
  @license MIT
  */
