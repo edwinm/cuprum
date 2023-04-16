@@ -1,6 +1,6 @@
 /**
- cuprum 0.1.16
- @copyright 2020 Edwin Martin <edwin@bitstorm.org>
+ cuprum 0.1.17
+ @copyright 2023 Edwin Martin <edwin@bitstorm.org>
  @license MIT
  */
 export declare class Cuprum<T> {

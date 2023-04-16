@@ -1,10 +1,10 @@
 /**
  cuprum __buildVersion__
- @copyright 2020 Edwin Martin <edwin@bitstorm.org>
+ @copyright 2023 Edwin Martin <edwin@bitstorm.org>
  @license MIT
  */
 export class Cuprum<T> {
-  private val: T;
+  private val!: T;
   private subscribers: Set<(value: T, oldValue?: T) => void> = new Set();
   private subscribersHot: Set<(value: boolean) => void> = new Set();
   private dispatched = false;
@@ -68,7 +68,7 @@ export class Cuprum<T> {
 
   map<U>(fn: (val: T) => U): Cuprum<U> {
     const event$ = new Cuprum<U>();
-    const dispatch = (value) => {
+    const dispatch = (value: T) => {
       event$.internalDispatch(fn(value));
     };
     event$.subscribeHot((hot) => {
@@ -83,7 +83,7 @@ export class Cuprum<T> {
 
   filter(fn: (val: T) => boolean): Cuprum<T> {
     const event$ = new Cuprum<T>();
-    const dispatch = (value) => {
+    const dispatch = (value: T) => {
       if (fn(value)) {
         event$.dispatch(value);
       }
@@ -168,6 +168,8 @@ export function fromCustomEvent(
   return obs$;
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export function combine<T>(obs1$: Observable<T>): Observable<[T]>;
 export function combine<T, U>(
   obs1$: Observable<T>,
@@ -255,8 +257,8 @@ export function merge<T>(...cuprumList: Observable<T>[]): Observable<T> {
 
 export function interval(msec: number): Cuprum<unknown> {
   const obs$ = new Cuprum();
-  let timer = <NodeJS.Timeout>null;
-  let counter;
+  let timer = <NodeJS.Timeout>(null as unknown);
+  let counter: number;
 
   obs$.subscribeHot((hot) => {
     if (hot) {
