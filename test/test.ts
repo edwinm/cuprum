@@ -50,7 +50,7 @@ describe("Cuprum", () => {
 
     pipe1$.dispatch("a2");
 
-    function sub(value) {
+    function sub(value: unknown) {
       assert.equal(value, "a1");
     }
   });
@@ -76,12 +76,12 @@ describe("Cuprum", () => {
     assert.equal(count1, 1);
     assert.equal(count2, 2);
 
-    function sub1(value) {
+    function sub1(value: unknown) {
       assert.equal(value, "a1");
       count1++;
     }
 
-    function sub2(value) {
+    function sub2(value: unknown) {
       assert.equal(value, "a1");
       count2++;
     }
