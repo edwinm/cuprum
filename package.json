@@ -1,6 +1,6 @@
 {
   "name": "cuprum",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Tiny state management library",
   "type": "module",
   "main": "dist/bundle.common.min.js",
@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "start": "http-server -o demo/ --silent",
     "build": "rollup --config --sourcemap --bundleConfigAsCjs",
-    "dev": "rollup --config --sourcemap --watch",
+    "dev": "rollup --config --sourcemap --bundleConfigAsCjs --watch",
     "release": "npm i --package-lock && npm test && npm run build && npm publish",
     "test": "karma start karma.conf.cjs",
     "lint": "npx eslint . --ext .js,.ts",
