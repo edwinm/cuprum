@@ -37,7 +37,7 @@ export declare function combine<T, U, V, W, X, Y>(obs1$: Observable<T>, obs2$: O
 export declare function combine<T, U, V, W, X, Y, Z>(obs1$: Observable<T>, obs2$: Observable<U>, obs3$: Observable<V>, obs4$: Observable<W>, obs5$: Observable<X>, obs6$: Observable<Y>, obs7$: Observable<Z>): Observable<[T, U, V, W, X, Y, Z]>;
 export declare function merge<T>(...cuprumList: Observable<T>[]): Observable<T>;
 export declare function interval(msec: number): Cuprum<unknown>;
-export declare type Observable<T> = Omit<Cuprum<T>, "dispatch">;
+export type Observable<T> = Omit<Cuprum<T>, "dispatch">;
 export interface Subscription {
     unsubscribe: () => void;
 }
