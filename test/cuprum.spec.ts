@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import { test } from "@playwright/test";
 import {
   Cuprum,
   fromEvent,
@@ -8,46 +9,36 @@ import {
   fromCustomEvent,
 } from "../src/cuprum";
 
-/**
- * Test framework used:
- * Mocha https://mochajs.org/
- * Assert https://nodejs.org/api/assert.html
- */
-
-describe("Cuprum", () => {
-  it("Subscribe and dispatch", (done) => {
+test.describe("Cuprum", () => {
+  test("Subscribe and dispatch", async () => {
     const pipe1$ = new Cuprum<string>();
 
-    pipe1$.subscribe((value) => {
-      assert.equal(value, "a1");
-      done();
+    const value = await new Promise<string>((resolve) => {
+      pipe1$.subscribe(resolve);
+      pipe1$.dispatch("a1");
     });
 
-    pipe1$.dispatch("a1");
+    assert.equal(value, "a1");
   });
 
-  it("Subscribe, map and dispatch", (done) => {
+  test("Subscribe, map and dispatch", async () => {
     const pipe1$ = new Cuprum<string>();
-
     const pipe2$ = pipe1$.map((val) => `[${val}]`);
 
-    pipe2$.subscribe((value) => {
-      assert.equal(value, "[a1]");
-      done();
+    const value = await new Promise<string>((resolve) => {
+      pipe2$.subscribe(resolve);
+      pipe1$.dispatch("a1");
     });
 
-    pipe1$.dispatch("a1");
+    assert.equal(value, "[a1]");
   });
 
-  it("Unsubscribe", () => {
+  test("Unsubscribe", () => {
     const pipe1$ = new Cuprum<string>();
 
     pipe1$.subscribe(sub);
-
     pipe1$.dispatch("a1");
-
     pipe1$.unsubscribe(sub);
-
     pipe1$.dispatch("a2");
 
     function sub(value: unknown) {
@@ -55,22 +46,17 @@ describe("Cuprum", () => {
     }
   });
 
-  it("Two subscribers", () => {
+  test("Two subscribers", () => {
     let count1 = 0;
     let count2 = 0;
     const pipe1$ = new Cuprum<string>();
 
     pipe1$.subscribe(sub1);
     pipe1$.subscribe(sub2);
-
     pipe1$.dispatch("a1");
-
     pipe1$.unsubscribe(sub1);
-
     pipe1$.dispatch("a1");
-
     pipe1$.unsubscribe(sub2);
-
     pipe1$.dispatch("a1");
 
     assert.equal(count1, 1);
@@ -87,7 +73,7 @@ describe("Cuprum", () => {
     }
   });
 
-  it("Old value", () => {
+  test("Old value", () => {
     let result = "";
     const pipe1$ = new Cuprum<string>();
 
@@ -102,7 +88,7 @@ describe("Cuprum", () => {
     assert.equal(result, "[a1/undefined][a2/a1][a3/a2]");
   });
 
-  it("Filter", () => {
+  test("Filter", () => {
     let result = "";
     const pipe$ = new Cuprum<string>();
 
@@ -123,19 +109,14 @@ describe("Cuprum", () => {
     assert.equal(result, "[a1][a2][a3][a4]");
   });
 
-  it("Promise", (done) => {
+  test("Promise", async () => {
     const pipe1$ = new Cuprum<string>();
-
-    (async function () {
-      setTimeout(() => pipe1$.dispatch("a2"), 10);
-
-      const value = await pipe1$.promise();
-      assert.equal(value, "a2");
-      done();
-    })();
+    setTimeout(() => pipe1$.dispatch("a2"), 10);
+    const value = await pipe1$.promise();
+    assert.equal(value, "a2");
   });
 
-  it("Observable", () => {
+  test("Observable", () => {
     let result = "";
     const pipe$ = new Cuprum<string>();
     const obs$ = pipe$.observable();
@@ -154,27 +135,33 @@ describe("Cuprum", () => {
     });
   });
 
-  it("fromEvent", (done) => {
-    const a = document.createElement("a");
-    fromEvent(a, "click").subscribe(() => {
-      done();
+  test("fromEvent", async () => {
+    const target = new EventTarget();
+
+    await new Promise<void>((resolve) => {
+      fromEvent(
+        target as unknown as HTMLElement,
+        "click" as keyof HTMLElementEventMap
+      ).subscribe(() => resolve());
+      target.dispatchEvent(new Event("click"));
     });
-    a.click();
   });
 
-  it("fromCustomEvent", (done) => {
-    const div = document.createElement("div");
-    fromCustomEvent(div, "open").subscribe(() => {
-      done();
+  test("fromCustomEvent", async () => {
+    const target = new EventTarget();
+
+    await new Promise<void>((resolve) => {
+      fromCustomEvent(target as unknown as HTMLElement, "open").subscribe(() =>
+        resolve()
+      );
+      target.dispatchEvent(new Event("open"));
     });
-    div.dispatchEvent(new Event("open"));
   });
 
-  it("Combine", () => {
+  test("Combine", () => {
     let result = "";
     const pipe1$ = new Cuprum<string>();
     const pipe2$ = new Cuprum<string>();
-
     const combined$ = combine(pipe1$, pipe2$);
 
     combined$.subscribe(([val1, val2]) => {
@@ -188,12 +175,11 @@ describe("Cuprum", () => {
     assert.equal(result, "[a1/undefined][a1/a2][a3/a2]");
   });
 
-  it("Combine three", () => {
+  test("Combine three", () => {
     let result = "";
     const pipe1$ = new Cuprum<string>();
     const pipe2$ = new Cuprum<string>();
     const pipe3$ = new Cuprum<number>();
-
     const combined$ = combine(pipe1$, pipe2$, pipe3$);
 
     combined$.subscribe(([val1, val2, val3]) => {
@@ -212,12 +198,11 @@ describe("Cuprum", () => {
     );
   });
 
-  it("Merge", () => {
+  test("Merge", () => {
     let result = "";
     const pipe1$ = new Cuprum<string>();
     const pipe2$ = new Cuprum<string>();
     const pipe3$ = new Cuprum<string>();
-
     const combined$ = merge(pipe1$, pipe2$, pipe3$);
 
     combined$.subscribe((value) => {
@@ -233,19 +218,21 @@ describe("Cuprum", () => {
     assert.equal(result, "[1a][2a][1b][3a][1c]");
   });
 
-  it("Interval", (done) => {
+  test("Interval", async () => {
     let result = "";
     const timer$ = interval(10);
 
-    const sub = timer$.subscribe((i) => {
-      result += `[${i}]`;
-      if (i == 10) {
-        sub.unsubscribe();
-        setTimeout(() => {
-          assert.equal(result, "[0][1][2][3][4][5][6][7][8][9][10]");
-          done();
-        }, 20);
-      }
+    await new Promise<void>((resolve) => {
+      const sub = timer$.subscribe((i) => {
+        result += `[${i}]`;
+        if (i == 10) {
+          sub.unsubscribe();
+          setTimeout(() => {
+            assert.equal(result, "[0][1][2][3][4][5][6][7][8][9][10]");
+            resolve();
+          }, 20);
+        }
+      });
     });
   });
 });
