@@ -8,6 +8,7 @@
     "lib": ["dom", "es2023"],
     "module": "es2015",
     "target": "es2015",
+    "rootDir": "./src",
     "moduleResolution": "bundler",
     "sourceMap": true,
     "esModuleInterop": true,
