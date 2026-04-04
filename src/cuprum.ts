@@ -257,7 +257,7 @@ export function merge<T>(...cuprumList: Observable<T>[]): Observable<T> {
 
 export function interval(msec: number): Cuprum<unknown> {
   const obs$ = new Cuprum();
-  let timer = <NodeJS.Timeout>(null as unknown);
+  let timer = <ReturnType<typeof setInterval>>(null as unknown);
   let counter: number;
 
   obs$.subscribeHot((hot) => {
