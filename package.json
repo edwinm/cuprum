@@ -1,6 +1,6 @@
 {
   "name": "cuprum",
-  "version": "0.1.18",
+  "version": "0.2.0",
   "description": "Tiny state management library",
   "type": "module",
   "main": "dist/bundle.common.min.js",
