@@ -4,6 +4,8 @@
 
 One kilobyte reactive state management library for JavaScript and TypeScript.
 
+It's heavily inspired by [RxJS](https://rxjs.dev/), but it's much more lightweight.
+
 ## Installation
 
 ```sh
