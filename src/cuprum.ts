@@ -5,13 +5,14 @@
  */
 export class Cuprum<T> {
   private val!: T;
-  private subscribers: Set<(value: T, oldValue?: T) => void> = new Set();
-  private subscribersHot: Set<(value: boolean) => void> = new Set();
+  private readonly subscribers: Set<(value: T, oldValue?: T) => void> =
+    new Set();
+  private readonly subscribersHot: Set<(value: boolean) => void> = new Set();
   private dispatched = false;
   private hot = false;
   private isSubject = false;
 
-  dispatch(value: T): Cuprum<T> {
+  dispatch(value: T): this {
     if (this.isSubject) {
       throw new Error("Can't dispatch on subject");
     }
