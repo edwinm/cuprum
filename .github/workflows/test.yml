@@ -16,7 +16,7 @@ jobs:
       - name: Install
         run: npm ci --ignore-scripts
       - name: Install Playwright browsers
-        run: npm exec --no -- playwright install chromium --with-deps
+        run: npm exec --no --ignore-scripts -- playwright install chromium --with-deps
       - name: Lint
         run: npm run lint
       - name: Test
