@@ -137,25 +137,35 @@ test.describe("Cuprum", () => {
 
   test("fromEvent", async () => {
     const target = new EventTarget();
+    const event = new Event("click");
 
-    await new Promise<void>((resolve) => {
+    const value = await new Promise<Event>((resolve) => {
       fromEvent(
         target as unknown as HTMLElement,
         "click" as keyof HTMLElementEventMap
-      ).subscribe(() => resolve());
-      target.dispatchEvent(new Event("click"));
+      ).subscribe((evt) => resolve(evt));
+      target.dispatchEvent(event);
     });
+
+    assert.equal(value, event);
+    assert.equal(value.type, "click");
+    assert.equal(value.target, target);
   });
 
   test("fromCustomEvent", async () => {
     const target = new EventTarget();
+    const event = new CustomEvent("open", { detail: { id: 42 } });
 
-    await new Promise<void>((resolve) => {
-      fromCustomEvent(target as unknown as HTMLElement, "open").subscribe(() =>
-        resolve()
+    const value = await new Promise<CustomEvent<{ id: number }>>((resolve) => {
+      fromCustomEvent(target as unknown as HTMLElement, "open").subscribe(
+        (evt) => resolve(evt as CustomEvent<{ id: number }>)
       );
-      target.dispatchEvent(new Event("open"));
+      target.dispatchEvent(event);
     });
+
+    assert.equal(value, event);
+    assert.equal(value.type, "open");
+    assert.deepEqual(value.detail, { id: 42 });
   });
 
   test("Combine", () => {
