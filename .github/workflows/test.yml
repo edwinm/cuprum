@@ -14,9 +14,9 @@ jobs:
         with:
           node-version: "22"
       - name: Install
-        run: npm install
+        run: npm ci --ignore-scripts
       - name: Install Playwright browsers
-        run: npx playwright install chromium --with-deps
+        run: npm exec --no -- playwright install chromium --with-deps
       - name: Lint
         run: npm run lint
       - name: Test

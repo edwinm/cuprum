@@ -1,2 +1,2 @@
-npx pretty-quick --staged
+npm exec --no -- pretty-quick --staged
 npm run lint
